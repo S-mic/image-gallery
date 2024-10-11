@@ -13,11 +13,13 @@
         }
         body {
             background: #191919;
+            overflow: hidden;
         }
         .gallery {
             width: 100%;
             display: flex;
-            overflow-x: scroll; /* Changed to horizontal scrolling */
+            overflow-x: scroll;
+            scroll-behavior: smooth;
         }
         .gallery div {
             width: 100%;
@@ -36,57 +38,78 @@
         .gallery-wrap {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             margin: 10% auto;
+            width: 80%; /* Added a fixed width to center buttons properly */
         }
         #backBtn, #nextBtn {
             width: 50px;
             cursor: pointer;
-            margin: 40px;
         }
         .gallery div img:hover {
             filter: grayscale(0);
             cursor: pointer;
             transform: scale(1.1);
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
 <body>
     <div class="gallery-wrap">
         <img src="back.png" alt="Back" id="backBtn">
-    </div>
-    <div class="gallery">
-        <div>
-            <span><img src="image-1.png" alt=""></span>
-            <span><img src="image-2.png" alt=""></span>
-            <span><img src="image-3.png" alt=""></span>
+        <div class="gallery">
+            <div>
+                <span><img src="image-1.png" alt=""></span>
+                <span><img src="image-2.png" alt=""></span>
+                <span><img src="image-3.png" alt=""></span>
+            </div>
+            <div>
+                <span><img src="image-4.png" alt=""></span>
+                <span><img src="image-5.png" alt=""></span>
+                <span><img src="image-6.png" alt=""></span>
+            </div>
         </div>
-        <div>
-            <span><img src="image-4.png" alt=""></span>
-            <span><img src="image-5.png" alt=""></span>
-            <span><img src="image-6.png" alt=""></span>
-        </div>
+        <img src="next.png" alt="Next" id="nextBtn">
     </div>
-    <img src="next.png" alt="Next" id="nextBtn">
     
     <script>
-        let scrollContainer = document.querySelector(".gallery");
-        let backBtn = document.getElementById("backBtn");
-        let nextBtn = document.getElementById("nextBtn");
+        const scrollContainer = document.querySelector(".gallery");
+        const backBtn = document.getElementById("backBtn");
+        const nextBtn = document.getElementById("nextBtn");
 
+        // Enable smooth scrolling on mouse wheel
         scrollContainer.addEventListener("wheel", (evt) => {
             evt.preventDefault();
-            scrollContainer.scrollLeft += evt.deltaY; // Corrected scrollLeft
+            scrollContainer.scrollLeft += evt.deltaY;
         });
 
+        // Function to hide buttons if at start or end
+        const checkScrollPosition = () => {
+            if (scrollContainer.scrollLeft === 0) {
+                backBtn.style.visibility = 'hidden';
+            } else {
+                backBtn.style.visibility = 'visible';
+            }
+            
+            if (scrollContainer.scrollLeft + scrollContainer.offsetWidth >= scrollContainer.scrollWidth) {
+                nextBtn.style.visibility = 'hidden';
+            } else {
+                nextBtn.style.visibility = 'visible';
+            }
+        };
+
+        // Scroll next and back with smooth behavior
         nextBtn.addEventListener("click", () => {
-            scrollContainer.style.scrollBehavior = "smooth";
-            scrollContainer.scrollLeft += 900; // Corrected scrollLeft
+            scrollContainer.scrollLeft += 900;
         });
 
         backBtn.addEventListener("click", () => {
-            scrollContainer.scrollLeft -= 900; // Corrected scrollLeft
+            scrollContainer.scrollLeft -= 900;
         });
+
+        // Initial button state and scroll check
+        checkScrollPosition();
+        scrollContainer.addEventListener("scroll", checkScrollPosition);
     </script>
 </body>
 </html>
